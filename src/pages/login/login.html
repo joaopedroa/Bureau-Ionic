@@ -4,14 +4,19 @@
 			<div class="wrap-login100">
 				<form class="login100-form validate-form">
 					<span class="login100-form-title p-b-26">
-						Bem vindo!
+						{{messageHome}}
 					</span>
 					<span class="login100-form-title p-b-48">
 						<i class="zmdi zmdi-font"></i>
 					</span>
-
+					
+					<div class="wrap-input100 validate-input" data-validate="Insira seu nome" [ngStyle]="typePageRegister && {'display':'block'} || !typePageRegister && {'display':'none'}">						
+						<input class="input100" type="text" name="pass" [(ngModel)] = 'user.displayName'>
+						<span class="focus-input100" data-placeholder="Nome" ></span>
+					</div>					
+					
 					<div class="wrap-input100 validate-input" data-validate = "E-mail inválido">
-						<input class="input100" type="text" name="email">
+						<input class="input100" type="text" name="email" [(ngModel)] = 'user.email'>
 						<span class="focus-input100" data-placeholder="Email"></span>
 					</div>
 
@@ -19,32 +24,60 @@
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye"></i>
 						</span>
-						<input class="input100" type="password" name="pass">
+						<input class="input100" type="password" name="pass" [(ngModel)] = 'user.password'>
 						<span class="focus-input100" data-placeholder="Password"></span>
 					</div>
 
-					<div class="container-login100-form-btn">
+					<div class="container-login100-form-btn" *ngIf = '!typePageRegister'>
 						<div class="wrap-login100-form-btn">
 							<div class="login100-form-bgbtn"></div>
-							<button class="login100-form-btn">
-								Login
+							<button class="login100-form-btn" (click) = 'signIn()'>
+								Entrar
+							</button>
+						</div>
+          </div>          
+
+					<div class="container-login100-form-btn" *ngIf = 'typePageRegister'>
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button class="login100-form-btn" (click) = 'signUp()'>
+								Cadastrar
 							</button>
 						</div>
 					</div>
+				
+					
+					<!-- Social Login --> 
+					<ion-grid>
+						<ion-row class= 'rowMediaSocial' *ngIf = '!typePageRegister'>
+						  <ion-col col-4 class = 'icons1'>
+							<ion-icon ios="logo-facebook" md="logo-facebook"></ion-icon>
+						  </ion-col>
+						  <ion-col col-4 class = 'icons2'>
+							<ion-icon ios="logo-github" md="logo-github" (click)= 'githubLogin()'></ion-icon>
+						  </ion-col>
+						  <ion-col col-4 class = 'icons3'>
+							<ion-icon ios="logo-google" md="logo-google"></ion-icon>
+						  </ion-col>
+						  <ion-col col-4 class = 'icons4'>
+							<ion-icon ios="ios-contact-outline" md="md-contact" (click) = 'signInAnonymous()'></ion-icon>
+						  </ion-col>
+						</ion-row>
+					</ion-grid>
 
-					<div class="text-center p-t-115">
+					<div class="text-center p-t-115" >
 						<span class="txt1">
-							Não possui conta?
-						</span>
+						{{messageFooter}}
+            </span>        
 
-						<a class="txt2" (click) = 'goRegisterPage()'>
-							Cadastre-se
+						<a class="txt2" (click) = 'goRegisterOrLogin()'>
+							{{messageLink}}
 						</a>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	
+    
 
 	<div id="dropDownSelect1"></div>

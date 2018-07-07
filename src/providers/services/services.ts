@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { AngularFireDatabaseModule, AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabaseModule, AngularFireDatabase,AngularFireList  } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
-
+import * as firebase from 'firebase';
 import {User} from '../user'
 
 /*
@@ -15,24 +15,19 @@ import {User} from '../user'
 @Injectable()
 export class ServicesProvider {
 
-  constructor(public http: HttpClient,private afAuth: AngularFireAuth) {
+  userRef: AngularFireList<any>;
+
+  constructor(private afAuth: AngularFireAuth) {
     console.log('Hello ServicesProvider Provider');
   }
 
-  emailLogin(email:string, password:string) {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password)
-        .then((user) => {
-          console.log(user);
-        })
-        .catch(error => console.log(error));
+  emailLogin(user:User) {
+    return this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password)
+       
   }
 
   anonymousLogin() {
-    return this.afAuth.auth.signInAnonymously()
-    .then((user) => {
-      console.log(user);
-    })
-    .catch(error => console.log(error));
+    return this.afAuth.auth.signInAnonymously();
   }
 
   signOut(): void {
@@ -45,4 +40,16 @@ export class ServicesProvider {
       .createUserWithEmailAndPassword(user.email, user.password);
   }
 
+  githubLogin() {
+    const provider = new firebase.auth.GithubAuthProvider()
+    return this.socialSignIn(provider);
+  }
+  private socialSignIn(provider) {
+    return this.afAuth.auth.signInWithPopup(provider)
+      .then((credential) =>  {
+         console.log(credential);
+          
+      })
+      .catch(error => console.log(error));
+  }
 }
