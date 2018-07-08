@@ -44,8 +44,14 @@ export class ServicesProvider {
     const provider = new firebase.auth.GithubAuthProvider()
     return this.socialSignIn(provider);
   }
+
+  facebookLogin() {
+    const provider = new firebase.auth.FacebookAuthProvider()
+    return this.socialSignIn(provider);
+  }
+
   private socialSignIn(provider) {
-    return this.afAuth.auth.signInWithPopup(provider)
+    return this.afAuth.auth.signInWithRedirect(provider)
       .then((credential) =>  {
          console.log(credential);
           

@@ -16,6 +16,7 @@ import {LoginPage} from '../pages/login/login'
 import { ServicesProvider } from '../providers/services/services';
 
 
+
 const firebaseAuth = {
   apiKey: "AIzaSyB4uniUbS1wBc_crXyYVrA-SI8N1s7b_pU",
   authDomain: "bureau-ionic.firebaseapp.com",
@@ -50,6 +51,7 @@ const firebaseAuth = {
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ServicesProvider
+   
   ]
 })
 export class AppModule {}

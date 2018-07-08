@@ -8,6 +8,9 @@ import { AngularFireAuth } from 'angularfire2/auth';
 
 import {HomePage} from '../home/home';
 
+
+
+
 @IonicPage()
 @Component({
   selector: 'page-login',
@@ -30,6 +33,7 @@ export class LoginPage {
           public loadingCtrl: LoadingController,
           private toastCtrl: ToastController,
           private fire:AngularFireAuth
+        
         ) {
   }
 
@@ -178,8 +182,17 @@ export class LoginPage {
     });
   }
   githubLogin(){
-    this.service.githubLogin();
+    this.service.githubLogin()
+    .then(success => {
+        this.navCtrl.setRoot(HomePage);
+    })
   }
+  
+  facebookLogin(){
+    this.service.facebookLogin();
+  }
+
+  
 
 
 
