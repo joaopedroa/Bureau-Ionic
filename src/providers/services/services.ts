@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { AngularFireDatabaseModule, AngularFireDatabase,AngularFireList  } from 'angularfire2/database';
+import { AngularFireList  } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
 import {User} from '../user'
@@ -51,11 +50,7 @@ export class ServicesProvider {
   }
 
   private socialSignIn(provider) {
-    return this.afAuth.auth.signInWithRedirect(provider)
-      .then((credential) =>  {
-         console.log(credential);
-          
-      })
-      .catch(error => console.log(error));
+    return this.afAuth.auth.signInWithPopup(provider);
+  
   }
 }

@@ -4,7 +4,6 @@ import { IonicPage, NavController, NavParams,LoadingController,ToastController  
 import {ServicesProvider} from '../../providers/services/services';
 import {User} from '../../providers/user';
 
-import { AngularFireAuth } from 'angularfire2/auth';
 
 import {HomePage} from '../home/home';
 
@@ -31,8 +30,8 @@ export class LoginPage {
           public navParams: NavParams,
           private service:ServicesProvider,
           public loadingCtrl: LoadingController,
-          private toastCtrl: ToastController,
-          private fire:AngularFireAuth
+          private toastCtrl: ToastController
+          
         
         ) {
   }
@@ -69,8 +68,8 @@ export class LoginPage {
       this.service.emailLogin(this.user)
       .then((authUser:any) => {
        console.log(authUser);
-        localStorage.setItem('user', authUser);
        
+        localStorage.setItem('photoURL',authUser.user.photoURL);
         this.navCtrl.setRoot(HomePage).then(() => {
           loading.dismiss();
           let toast = this.toastCtrl.create({
@@ -132,7 +131,8 @@ export class LoginPage {
         this.service.createUser(this.user)
         .then((user:any) => {                    
          user.user.sendEmailVerification();
-         user.user.updateProfile({displayName: this.user.displayName});        
+         user.user.updateProfile({displayName: this.user.displayName});  
+         localStorage.setItem('photoURL',user.user.photoURL);      
           this.navCtrl.setRoot(HomePage).then(() => {
             toast.setMessage(`Olá ${this.user.displayName}`);
             loading.dismiss();
@@ -159,17 +159,15 @@ export class LoginPage {
     let loading = this.loadingCtrl.create({
 
       showBackdrop: true,
-      content: `Criando conta...`,
+      content: `Fazendo login...`,
       duration: 5000
     });
     loading.present();
 
-    let toast = this.toastCtrl.create({ 
-      duration: 3000, position: 'bottom' 
-    });
 
     this.service.anonymousLogin()
     .then((success:any) =>{
+        localStorage.setItem('photoURL',success.user.photoURL);
         this.navCtrl.setRoot(HomePage).then(() => {
           loading.dismiss();
           let toast = this.toastCtrl.create({
@@ -181,15 +179,88 @@ export class LoginPage {
         });
     });
   }
+
   githubLogin(){
+
+    let loading = this.loadingCtrl.create({
+
+      showBackdrop: true,
+      content: `Fazendo login...`,
+      duration: 5000
+    });
+    loading.present();
+
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: "bottom"
+    });
+
     this.service.githubLogin()
     .then(success => {
-        this.navCtrl.setRoot(HomePage);
+        console.log(success);
+        localStorage.setItem('photoURL',success.user.photoURL);
+        
+        this.navCtrl.setRoot(HomePage).then(() => {
+          
+          loading.dismiss();
+          let toast = this.toastCtrl.create({
+            duration: 5000,
+            position: "bottom"
+          });
+          toast.setMessage(`Olá ${success.user.displayName}`);
+          toast.present();
+        });
+    })
+    .catch((error: any) => {
+      console.log(error);
+      loading.dismiss();
+      if (error.code == 'auth/account-exists-with-different-credential') {
+    
+        toast.setMessage('Este e-mail já está logado com outra credencial. O email é ' + error.email + '.');
+      }  
+      toast.present();
+
     })
   }
   
   facebookLogin(){
-    this.service.facebookLogin();
+    let loading = this.loadingCtrl.create({
+
+      showBackdrop: true,
+      content: `Fazendo login...`,
+      duration: 5000
+    });
+    loading.present();
+
+    let toast = this.toastCtrl.create({
+      duration: 3000,
+      position: "bottom"
+    });
+
+    this.service.facebookLogin()
+    .then(success => {
+        console.log(success);
+        localStorage.setItem('photoURL',success.user.photoURL);
+        this.navCtrl.setRoot(HomePage).then(() => {
+          loading.dismiss();
+          let toast = this.toastCtrl.create({
+            duration: 3000,
+            position: "bottom"
+          });
+          toast.setMessage(`Olá ${success.user.displayName}`);
+          toast.present();
+        });
+    })
+    .catch((error: any) => {
+      console.log(error);
+      loading.dismiss();
+      if (error.code == 'auth/account-exists-with-different-credential') {
+    
+        toast.setMessage('Este e-mail já está logado com outra credencial. O email é ' + error.email + '.');
+      }  
+      toast.present();
+
+    })
   }
 
   
